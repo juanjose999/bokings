@@ -31,6 +31,8 @@ public class SecurityConfig {
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth->{
                     auth.requestMatchers("/auth/**","/login/**").permitAll();
+                    auth.requestMatchers("/hotel/**").hasRole("HOTEL");
+                    auth.requestMatchers("/customer/**").hasRole("CUSTOMER");
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

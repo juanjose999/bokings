@@ -35,11 +35,13 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.findCustomerById(id));
     }
 
-
-
     @PostMapping("/rent")
     public InvoiceResponseDto rentRoom(@RequestBody RegisterRentRoom registerRentRoom) throws NoSuchFieldException {
         if(registerRentRoom!=null){
+            Long currentUserId = customerService.findCustomerById(registerRentRoom.idClient()).id();
+            if(!currentUserId.equals(registerRentRoom.idRoom())){
+                throw new CustomerNotFoundException("Customer not found");
+            }
             return customerService.rentRoomAvailable(registerRentRoom);
         }else{
             throw new CustomerRentRoomException("form register rent room is empty");

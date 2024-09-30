@@ -56,6 +56,7 @@ public class HotelTest {
 
     @Test
     public void testSavedHotel() throws Exception {
+        // Datos de prueba para el registro del hotel
         RegisterHotel registerHotel = RegisterHotel.builder()
                 .fullNameHotel("Casona")
                 .city("Pamplona")
@@ -64,18 +65,25 @@ public class HotelTest {
                 .password("1234")
                 .phone("13412414")
                 .build();
+
+        // Convertir el registro a JSON
         String registerHotelToJson = objectMapper.writeValueAsString(registerHotel);
+
+        // Crear un HotelResponseDto para la respuesta esperada
         Hotel hotel = HotelMapper.formRegisterToEntity(registerHotel);
         HotelResponseDto hotelResponseDto = HotelMapper.formEntityToResponse(hotel);
 
+        // Simular el servicio
         when(hotelService.saveHotel(any(RegisterHotel.class))).thenReturn(hotelResponseDto);
 
+        // Realizar la solicitud y verificar la respuesta
         mockMvc.perform(post("/hotel")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(registerHotelToJson))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(hotelResponseDto)));
+                .andExpect(status().isOk()) // Verificar que el estado es 200 OK
+                .andExpect(content().json(objectMapper.writeValueAsString(hotelResponseDto))); // Verificar el contenido
     }
+
     @Test
     public void testAllHotels() throws Exception {
         Hotel hotel1 = Hotel.builder()

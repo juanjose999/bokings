@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @RequiredArgsConstructor
+@Service
 public class JwtService {
 
     public static final String SECRET = "8F433340F48C9F204C2770973A5B1BC4379593EE841A840D6DF5FC5D46B09E0CF853FC370525FEC8BFE9672BAB3E3CB10671F5808C26BAD946E23194EC8C47E";

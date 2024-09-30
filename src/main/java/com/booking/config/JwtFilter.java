@@ -19,13 +19,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Configuration
-@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final ApplicationContext context;
     private final HotelService hotelService;
     private final CustomerService customerService;
+
+    public JwtFilter(JwtService jwtService, ApplicationContext context, HotelService hotelService, CustomerService customerService) {
+        this.jwtService = jwtService;
+        this.context = context;
+        this.hotelService = hotelService;
+        this.customerService = customerService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
