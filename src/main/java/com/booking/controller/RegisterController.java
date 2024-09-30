@@ -18,20 +18,21 @@ import javax.xml.datatype.DatatypeConfigurationException;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class RegisterController {
 
     private final CustomerService customerService;
     private final HotelService hotelService;
 
-    @PostMapping("/customer")
+    @PostMapping("/register/customer")
     public ResponseEntity<CustomerResponseDto> saveCustomer(@RequestBody RegisterCustomerForm customerForm) throws NoSuchFieldException, DatatypeConfigurationException {
         return ResponseEntity.ok(customerService.saveCustomer(customerForm));
     }
 
-    @PostMapping("/hotel")
+    @PostMapping("/register/hotel")
     public ResponseEntity<HotelResponseDto> saveHotel(@RequestBody RegisterHotel registerHotel){
         return ResponseEntity.ok(hotelService.saveHotel(registerHotel));
     }
+
 
 
 }
