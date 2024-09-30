@@ -5,6 +5,7 @@ import com.booking.entiti.Hotel;
 import com.booking.entiti.Invoice;
 import com.booking.entiti.Room;
 import com.booking.repository.interfaces.IHotelRepository;
+import com.booking.repository.interfaces.jpa.IHotelRepositoryJPA;
 import com.booking.service.interfaces.IHotelService;
 import com.booking.service.request.RegisterHotel;
 import com.booking.service.response.hotel.HotelMapper;
@@ -14,16 +15,22 @@ import com.booking.service.response.invoice.InvoiceMapper;
 import com.booking.service.response.invoice.InvoiceResponseDto;
 import com.booking.service.response.room.RoomResponseDtoWithBookingInside;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 @RequiredArgsConstructor
-public class HotelService implements IHotelService {
+public class HotelService implements IHotelService, UserDetailsService {
 
     private final IHotelRepository hotelRepository;
+    private final IHotelRepositoryJPA hotelRepositoryJPA;
 
     public List<HotelResponseDtoWithBookings> allHotel(){
         List<Hotel> allH = hotelRepository.allHotel();
@@ -84,5 +91,19 @@ public class HotelService implements IHotelService {
 
     public boolean deleteHotelById(Long id){
         return hotelRepository.deleteHotelById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Hotel> findHotel = Optional.ofNullable(hotelRepositoryJPA.findByFullNameHotel(username));
+        if(findHotel.isPresent()){
+            return User.builder()
+                    .username(findHotel.get().getFullNameHotel())
+                    .password(findHotel.get().getPassword())
+                    .roles("HOTEL")
+                    .build();
+        }else{
+            throw new UsernameNotFoundException("Hotel not found in bd");
+        }
     }
 }

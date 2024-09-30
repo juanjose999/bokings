@@ -30,11 +30,6 @@ public class HotelController {
         return ResponseEntity.ok(hotelService.findHotelById(id));
     }
 
-    @PostMapping()
-    public ResponseEntity<HotelResponseDto> saveHotel(@RequestBody RegisterHotel registerHotel){
-        return ResponseEntity.ok(hotelService.saveHotel(registerHotel));
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<HotelResponseDto> updateHotel(@PathVariable Long id,@RequestBody RegisterHotel registerHotel){
         return ResponseEntity.ok(hotelService.updateHotel(id,registerHotel));

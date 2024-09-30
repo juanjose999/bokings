@@ -12,6 +12,7 @@ import com.booking.repository.interfaces.IBookingRepository;
 import com.booking.repository.interfaces.ICustomerRepository;
 import com.booking.repository.interfaces.IHotelRepository;
 import com.booking.repository.interfaces.IRoomRepository;
+import com.booking.repository.interfaces.jpa.ICustomerRepositoryJPA;
 import com.booking.repository.interfaces.jpa.IInvoiceRepositoryJPA;
 import com.booking.service.interfaces.ICustomerService;
 import com.booking.service.request.RegisterBooking;
@@ -23,6 +24,10 @@ import com.booking.service.response.customer.CustomerResponseDto;
 import com.booking.service.response.invoice.InvoiceMapper;
 import com.booking.service.response.invoice.InvoiceResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -38,7 +43,8 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerService implements ICustomerService {
+public class CustomerService implements ICustomerService, UserDetailsService{
+    private final ICustomerRepositoryJPA customerRepositoryJPA;
 
     private final ICustomerRepository customerRepository;
     private final IHotelRepository hotelRepository;
@@ -191,6 +197,20 @@ public class CustomerService implements ICustomerService {
             return true;
         } else {
             throw new CustomerNotFoundException("Customer not found with ID: " + id);
+        }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Customer> findCustomer = Optional.ofNullable(customerRepositoryJPA.findByFullName(username));
+        if(findCustomer.isPresent()){
+            return User.builder()
+                    .username(findCustomer.get().getFullName())
+                    .password(findCustomer.get().getPassword())
+                    .roles("CUSTOMER")
+                    .build();
+        }else{
+            throw new UsernameNotFoundException("Customer not found.");
         }
     }
 

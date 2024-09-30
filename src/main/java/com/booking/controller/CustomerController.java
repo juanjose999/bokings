@@ -35,10 +35,7 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.findCustomerById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<CustomerResponseDto> saveCustomer(@RequestBody RegisterCustomerForm customerForm) throws NoSuchFieldException, DatatypeConfigurationException {
-        return ResponseEntity.ok(customerService.saveCustomer(customerForm));
-    }
+
 
     @PostMapping("/rent")
     public InvoiceResponseDto rentRoom(@RequestBody RegisterRentRoom registerRentRoom) throws NoSuchFieldException {
