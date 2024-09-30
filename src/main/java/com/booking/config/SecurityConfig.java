@@ -30,6 +30,7 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth->{
+                    auth.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
                     auth.requestMatchers("/auth/**","/login/**").permitAll();
                     auth.requestMatchers("/hotel/**").hasRole("HOTEL");
                     auth.requestMatchers("/customer/**").hasRole("CUSTOMER");
