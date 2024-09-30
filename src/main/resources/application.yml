@@ -1,0 +1,16 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-crkda0ggph6c73c8a0mg-a.oregon-postgres.render.com/bookings_1n0g?user=bookings_1n0g_user&password=f7ci7fOHY2tNVdiadiVE6OmeJPdnaZDf
+    username: bookings_1n0g_user
+    password: f7ci7fOHY2tNVdiadiVE6OmeJPdnaZDf
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
