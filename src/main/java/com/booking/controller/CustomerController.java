@@ -39,7 +39,7 @@ public class CustomerController {
     public InvoiceResponseDto rentRoom(@RequestBody RegisterRentRoom registerRentRoom) throws NoSuchFieldException {
         if(registerRentRoom!=null){
             Long currentUserId = customerService.findCustomerById(registerRentRoom.idClient()).id();
-            if(!currentUserId.equals(registerRentRoom.idRoom())){
+            if(!currentUserId.equals(registerRentRoom.idClient())){
                 throw new CustomerNotFoundException("Customer not found");
             }
             return customerService.rentRoomAvailable(registerRentRoom);

@@ -31,6 +31,7 @@ public class CustomerMapper {
                     return CustomerResponseDto.builder()
                             .id(c.getIdCustomer())
                             .nombre(c.getFullName())
+                            .email(c.getEmail())
                             .invoice(invoiceDto) // Asigna la lista de invoices (vacía si no hay)
                             .build();
                 })

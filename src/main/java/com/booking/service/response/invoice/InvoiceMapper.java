@@ -15,6 +15,7 @@ public class InvoiceMapper {
                 .endDayBooking(String.valueOf(invoice.getEndDayBooking()))
                 .idRoom(String.valueOf(invoice.getIdRoom()))
                 .nameCustomer(invoice.getNameCustomer())
+                .identityCardCustomer(invoice.getIdentityCardCustomer())
                 .email(invoice.getEmailCustomer())
                 .build();
     }
