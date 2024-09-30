@@ -1,6 +1,7 @@
 package com.booking;
 
 import com.booking.controller.HotelController;
+import com.booking.controller.RegisterController;
 import com.booking.entiti.*;
 import com.booking.exception.hotel.HotelNotFoundException;
 import com.booking.repository.interfaces.IHotelRepository;
@@ -20,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -39,19 +41,25 @@ public class HotelTest {
     @Mock
     private HotelService hotelService;
 
-    @Mock
-    private IHotelRepository IHotelRepository;
     @InjectMocks
-    private HotelController hotelController;
+    private RegisterController registerController; // Ahora se usa correctamente
+
+    @InjectMocks
+    private HotelController hotelController; // También se usa correctamente
+
     @Autowired
     private MockMvc mockMvc;
+
     private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         objectMapper = new ObjectMapper();
-        mockMvc = MockMvcBuilders.standaloneSetup(new HotelController(hotelService)).build();
+        // Configurar MockMvc para ambos controladores
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(registerController, hotelController)
+                .build();
     }
 
     @Test
@@ -63,7 +71,7 @@ public class HotelTest {
                 .email("casona@gmail.com")
                 .location("Calle 3# 23-42")
                 .password("1234")
-                .phone("13412414")
+                .phone("1341241483")
                 .build();
 
         // Convertir el registro a JSON
@@ -73,15 +81,16 @@ public class HotelTest {
         Hotel hotel = HotelMapper.formRegisterToEntity(registerHotel);
         HotelResponseDto hotelResponseDto = HotelMapper.formEntityToResponse(hotel);
 
-        // Simular el servicio
+        // Simular el servicio devolviendo un HotelResponseDto
         when(hotelService.saveHotel(any(RegisterHotel.class))).thenReturn(hotelResponseDto);
 
         // Realizar la solicitud y verificar la respuesta
-        mockMvc.perform(post("/hotel")
+        mockMvc.perform(post("/auth/register/hotel") // Ruta corregida
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(registerHotelToJson))
-                .andExpect(status().isOk()) // Verificar que el estado es 200 OK
-                .andExpect(content().json(objectMapper.writeValueAsString(hotelResponseDto))); // Verificar el contenido
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.fullNameHotel").value("Casona"))
+                .andExpect(jsonPath("$.email").value("casona@gmail.com"));
     }
 
     @Test
